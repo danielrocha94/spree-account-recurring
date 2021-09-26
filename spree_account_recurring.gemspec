@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.description = s.summary
   s.required_ruby_version = '>= 2.1.0'
 
-  spree_version = '>= 3.2.0', '< 4.0.0'
+  spree_version = '>= 3.2.0', '< 5.0.0'
   s.add_dependency 'spree_core', spree_version
 
   s.author    = 'Priyank Gupta'
@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.requirements << 'none'
 
   s.add_development_dependency "appraisal"
-  s.add_dependency 'stripe', '3.3.2'
+  s.add_dependency 'stripe', '>= 3.3.2'
   s.add_dependency 'stripe_tester'
 
   s.add_development_dependency 'rspec-rails',  '~> 3.4'
