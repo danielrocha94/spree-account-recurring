@@ -11,7 +11,14 @@ module Spree
     end
 
     def create
-      @subscription = @plan.subscription_plans.build(subscription_params.merge(user_id: spree_current_user.id))
+      subscription_plans_params = {
+        user_id: spree_current_user.id,
+      }
+
+      subscription_plans_params[:card_token] = params[:subscription][:card_token] if params[:subscription].present?
+
+      @subscription = @plan.subscription_plans.build(subscription_plans_params)
+      
       if @subscription.save_and_manage_api
         redirect_to plan_subscription_plan_url(@plan, @subscription), notice: "Thank you for subscribing!"
       else

@@ -24,6 +24,8 @@ $(document).ready(function(){
   $(".cardExpiry").payment('formatCardExpiry');
   $(".cardCode").payment('formatCardCVC');
 
+  Stripe.setPublishableKey($(".pub_key").attr('id'));
+
   $('.continue').on('click', function(){
     $('#stripeError').hide();
     if(Spree.stripePaymentMethod.is(':visible')){

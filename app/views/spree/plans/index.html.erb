@@ -6,8 +6,10 @@
     <div class="panel panel-default" style="min-height: 180px;">
       <div class="panel-body" >
         <strong><%= plan.name %></strong><br/>
-        <%= number_to_currency plan.amount %> every <%= plan.interval_count %> <%= plan.interval.pluralize(plan.interval_count) %><br/>
-        <%= plan.trial_period_days %> <%= 'day'.pluralize(plan.trial_period_days) %> trial <br/>
+        <%= number_to_currency plan.amount, unit: plan.currency %> every <%= plan.interval_count %> <%= plan.interval.pluralize(plan.interval_count) %><br/>
+        <% if plan.trial_period_days > 0 %>
+          <%= plan.trial_period_days %> <%= 'day'.pluralize(plan.trial_period_days) %> trial <br/>
+        <% end %>
         <% if spree_current_user %>
           <% if subscription = @user_subscriptions.find {|s| s.plan_id == plan.id } %>
             <hr>
