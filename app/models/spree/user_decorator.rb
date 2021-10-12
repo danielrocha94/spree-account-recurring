@@ -40,7 +40,7 @@ Spree::User.class_eval do
   def list_stripe_cards
     Stripe::Customer.list_sources(
       stripe_customer_id,
-      {object: 'card'}
+      {object: 'card', limit: 50}
     )
   end
 
@@ -68,5 +68,10 @@ Spree::User.class_eval do
         }
       }
     )
+  end
+
+  def get_stripe_default_card
+    credit_cards.all
+      .find_by(gateway_payment_profile_id: api_customer.default_source)
   end
 end
