@@ -33,6 +33,7 @@ Spree::User.class_eval do
         gateway_customer_profile_id: stripe_card.customer,
         name: stripe_card.name,
         payment_method: stripe_gateway,
+        default: stripe_card.default
       })
     end
   end
@@ -50,7 +51,8 @@ Spree::User.class_eval do
         {source: token}
       )
     if stripe_payment_method && set_default
-      update_spree_default_payment_method(stripe_payment_method)
+      is_new_default = update_spree_default_payment_method(stripe_payment_method)
+      stripe_payment_method["default"] = is_new_default
     end
 
     find_or_create_credit_card_from_stripe_source(stripe_payment_method)

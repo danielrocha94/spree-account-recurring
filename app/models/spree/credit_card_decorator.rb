@@ -7,6 +7,8 @@ Spree::CreditCard.class_eval do
     card.delete_stripe_card
   end
 
+  validates_uniqueness_of(:gateway_payment_profile_id)
+
   def create_stripe_card_token(cvc)
     card_obj = {
       number: number,
@@ -57,11 +59,10 @@ Spree::CreditCard.class_eval do
         gateway_customer_profile_id,
         gateway_payment_profile_id,
       )
-      user.get_stripe_default_card.set_default!(true)
-      return true
     rescue Exception => error
       cards = user.list_stripe_cards
       raise ArgumentError.new("La tarjeta no pudo ser eliminada.") if cards.data.filter{|card| card.id == gateway_payment_profile_id}.present?
     end
   end
+
 end
