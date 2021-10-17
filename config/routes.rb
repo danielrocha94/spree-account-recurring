@@ -23,7 +23,10 @@ Rails.application.routes.draw do
     namespace :app do
       namespace :api, defaults: {format: :json} do
         namespace :v1 do
-          get 'plans' => 'plans#index';
+          get 'plans/get_subscribed_plans' => 'plans#get_subscribed_plans'
+          resources :plans, only: :index, controller: :plans do
+            resources :subscription_plans, only: [:show, :create, :destroy]
+          end
         end
       end
     end

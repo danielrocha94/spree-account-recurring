@@ -73,7 +73,13 @@ Spree::User.class_eval do
   end
 
   def get_stripe_default_card
-    credit_cards.all
+    stripe_default_card = credit_cards.all
       .find_by(gateway_payment_profile_id: api_customer.default_source)
+    stripe_default_card.set_default!(true) unless default_credit_card.id.eql?(stripe_default_card.id)
+    return stripe_default_card
+  end
+
+  def get_default_credit_card
+    default_credit_card || get_stripe_default_card
   end
 end
