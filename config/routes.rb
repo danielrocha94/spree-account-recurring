@@ -17,15 +17,14 @@ Rails.application.routes.draw do
       resources :subscription_plans, only: [:show, :create, :destroy, :new]
     end
 
-  end
-
-  scope "(:locale)", locale: /en|es/ do
-    namespace :app do
-      namespace :api, defaults: {format: :json} do
-        namespace :v1 do
-          get 'plans/get_subscribed_plans' => 'plans#get_subscribed_plans'
-          resources :plans, only: :index, controller: :plans do
-            resources :subscription_plans, only: [:show, :create, :destroy]
+    scope "(:locale)", locale: /en|es/ do
+      namespace :app do
+        namespace :api, defaults: {format: :json} do
+          namespace :v1 do
+            get 'plans/get_subscribed_plans' => 'plans#get_subscribed_plans'
+            resources :plans, only: :index, controller: :plans do
+              resources :subscription_plans, only: [:show, :create, :destroy]
+            end
           end
         end
       end

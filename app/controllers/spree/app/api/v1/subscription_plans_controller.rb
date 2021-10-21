@@ -1,5 +1,5 @@
 require 'base64'
-class App::Api::V1::SubscriptionPlansController < App::Api::V1::ApplicationController
+class Spree::App::Api::V1::SubscriptionPlansController < App::Api::V1::ApplicationController
   before_action :find_active_plan, only: [:new, :create]
   before_action :find_plan, only: [:show, :destroy]
   before_action :find_subscription, only: [:destroy]
