@@ -30,6 +30,11 @@
       </div>
 
       <div class="form-group">
+        <%= f.label :credit_reward_amount, Spree.t(:credit_reward_amount) %>
+        <%= f.text_field :credit_reward_amount, :class => 'form-control' %>
+      </div>
+
+      <div class="form-group">
         <%= f.label :trial_period_days, Spree.t(:trial_period_days) %>
         <%= f.text_field :trial_period_days, :class => 'form-control', :disabled => @plan.persisted? %>
       </div>
