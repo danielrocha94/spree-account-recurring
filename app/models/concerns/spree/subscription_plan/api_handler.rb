@@ -27,7 +27,10 @@ module Spree
 
       def save_and_manage_api(*args)
         begin
-          new_record? ? save : update_attributes(*args)
+          new_record? ? save : update(*args)
+          user.promote_distributor! if id.present? && unsubscribed_at.blank?
+          user.inactivate_distributor! if user.distributor? && unsubscribed_at_changed? && unsubscribed_at.present?
+          return true
         rescue provider.error_class, ActiveRecord::RecordNotFound => e
           logger.error "Error while subscribing: #{e.message}"
           errors.add :base, "There was a problem with your credit card"

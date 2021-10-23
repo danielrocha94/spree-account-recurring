@@ -14,7 +14,6 @@ module Spree
             begin
               stripe_subscription = Stripe::Subscription.create(stripe_subscription_params(customer.id, subscription_plan))
               subscription_plan.stripe_subscription_id = stripe_subscription.id
-              subscription_plan.user.promote_distributor!
             rescue Stripe::InvalidRequestError, Stripe::AuthenticationError, Stripe::StripeError
               false
             end
@@ -26,7 +25,6 @@ module Spree
             begin
               stripe_subscription = Stripe::Subscription.retrieve(subscription_plan.stripe_subscription_id)
               stripe_subscription.delete
-              subscription_plan.user.inactivate_distributor!
             rescue Stripe::InvalidRequestError, Stripe::AuthenticationError, Stripe::StripeError
               false
             end
