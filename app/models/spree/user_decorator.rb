@@ -46,6 +46,8 @@ Spree::User.class_eval do
   end
 
   def create_stripe_card(token, set_default=true)
+    find_or_create_stripe_customer unless stripe_customer_id?
+
     stripe_payment_method = Stripe::Customer.create_source(
         stripe_customer_id,
         {source: token}
