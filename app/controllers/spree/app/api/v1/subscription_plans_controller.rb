@@ -21,9 +21,10 @@ class Spree::App::Api::V1::SubscriptionPlansController < App::Api::V1::Applicati
         }
       else
         render :json => {
-          message: "No se ha podido realizar la suscripción",
-          user_subscriptions: find_user_active_subscriptions
-        }
+          message: "No se ha podido realizar la suscripción, por favor verifica los datos.",
+          user_subscriptions: find_user_active_subscriptions,
+          status: :bad_request
+        }, status: :bad_request
       end
   end
 
