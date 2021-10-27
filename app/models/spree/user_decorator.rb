@@ -47,19 +47,22 @@ Spree::User.class_eval do
 
   def create_stripe_card(token, set_default=true)
     find_or_create_stripe_customer unless stripe_customer_id?
+    begin
+      stripe_payment_method = Stripe::Customer.create_source(
+          stripe_customer_id,
+          {source: token}
+        )
+      if stripe_payment_method && set_default
+        is_new_default = update_spree_default_payment_method(stripe_payment_method)
+        stripe_payment_method["default"] = is_new_default
+      end
 
-    stripe_payment_method = Stripe::Customer.create_source(
-        stripe_customer_id,
-        {source: token}
-      )
-    if stripe_payment_method && set_default
-      is_new_default = update_spree_default_payment_method(stripe_payment_method)
-      stripe_payment_method["default"] = is_new_default
+      find_or_create_credit_card_from_stripe_source(stripe_payment_method)
+
+      stripe_payment_method
+    rescue => e
+      return {error: e.error, status: 402}
     end
-
-    find_or_create_credit_card_from_stripe_source(stripe_payment_method)
-
-    return stripe_payment_method
   end
 
   def update_spree_default_payment_method(stripe_payment_method)
