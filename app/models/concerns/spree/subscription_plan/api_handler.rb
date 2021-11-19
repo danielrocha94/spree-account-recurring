@@ -28,8 +28,8 @@ module Spree
       def save_and_manage_api(*args)
         begin
           new_record? ? save : update(*args)
-          user.promote_distributor! if user.distributor_inactive? && id.present? && unsubscribed_at.blank?
-          user.inactivate_distributor! if user.distributor? && unsubscribed_at.present?
+          user.activate_subscription! if !user.subscription_active? && id.present? && unsubscribed_at.blank?
+          user.inactivate_subscription! if user.subscription_active? && unsubscribed_at.present?
           return true
         rescue provider.error_class, ActiveRecord::RecordNotFound => e
           logger.error "Error while subscribing: #{e.message}"
