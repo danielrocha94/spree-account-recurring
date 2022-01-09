@@ -67,6 +67,7 @@ module Spree
     end
 
     def authenticate_subscription
+      # need to update spree_current_user to user found
       if subscription = spree_current_user.subscription_plans.undeleted.first
         flash[:alert] = "You have already subscribed."
         redirect_to plan_subscription_url(@plan, subscription)

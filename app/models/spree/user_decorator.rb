@@ -33,7 +33,7 @@ Spree::User.class_eval do
         gateway_customer_profile_id: stripe_card.customer,
         name: stripe_card.name,
         payment_method: stripe_gateway,
-        default: stripe_card.default
+        default: !!stripe_card["default"]
       })
     end
   end

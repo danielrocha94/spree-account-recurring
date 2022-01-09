@@ -1,5 +1,6 @@
 require 'base64'
 class Spree::App::Api::V1::SubscriptionPlansController < App::Api::V1::ApplicationController
+  before_action :select_user, only: [:create, :destroy]
   before_action :find_active_plan, only: [:new, :create]
   before_action :find_plan, only: [:show, :destroy]
   before_action :find_subscription, only: [:destroy]
@@ -7,10 +8,10 @@ class Spree::App::Api::V1::SubscriptionPlansController < App::Api::V1::Applicati
 
   def create
       subscription_plans_params = {
-        user_id: spree_current_user.id,
+        user_id: @user.id,
       }
 
-      subscription_plans_params[:card_token] = params[:subscription][:card_token] if params[:subscription].present?
+      subscription_plans_params[:card_token] = get_card_token
 
       @subscription = @plan.subscription_plans.build(subscription_plans_params)
       
@@ -47,7 +48,7 @@ class Spree::App::Api::V1::SubscriptionPlansController < App::Api::V1::Applicati
   private
 
   def find_user_active_subscriptions
-    spree_current_user.subscription_plans.undeleted.all.to_a
+    @user.subscription_plans.undeleted.all.to_a
   end
 
   def find_active_plan
@@ -73,7 +74,7 @@ class Spree::App::Api::V1::SubscriptionPlansController < App::Api::V1::Applicati
   end
 
   def authenticate_subscription
-    if subscription = spree_current_user.subscription_plans.undeleted.first
+    if subscription = @user.subscription_plans.undeleted.first
       return render :json => {
         status: :conflict, #409
         error: {
@@ -94,6 +95,19 @@ def find_subscription
       },
       status: :not_found
     }, status: :not_found
+  end
+end
+
+def select_user
+  @user = params["user_id"].present? ? Spree::User.find(params["user_id"]) : spree_current_user
+end
+
+def get_card_token
+  return params[:subscription][:card_token] if params[:subscription].present?
+
+  if params[:card_id]
+    card = @user.credit_cards.find(params[:card_id])
+    return card.gateway_payment_profile_id
   end
 end
 
