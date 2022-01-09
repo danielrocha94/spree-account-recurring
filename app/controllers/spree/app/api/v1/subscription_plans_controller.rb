@@ -105,7 +105,7 @@ end
 def get_card_token
   return params[:subscription][:card_token] if params[:subscription].present?
 
-  if params[:card_id]
+  if params[:card_id] && spree_current_user.admin?
     card = @user.credit_cards.find(params[:card_id])
     return card.gateway_payment_profile_id
   end
