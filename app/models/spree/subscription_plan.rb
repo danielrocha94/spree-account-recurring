@@ -13,8 +13,8 @@ module Spree
     has_many :events, class_name: 'Spree::SubscriptionEvent'
 
     validates :plan_id, :email, :user_id, presence: true
-    validates :plan_id, uniqueness: { scope: [:user_id, :unsubscribed_at] }
-    validates :user_id, uniqueness: { scope: :unsubscribed_at }
+    #validates :plan_id, uniqueness: { scope: [:user_id, :unsubscribed_at] }
+   # validates :user_id, uniqueness: { scope: :unsubscribed_at }
 
     if Rails.version.to_f >= 5.1
       delegate :api_plan_id, to: :plan
